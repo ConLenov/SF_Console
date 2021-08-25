@@ -1,8 +1,7 @@
+from selenium import webdriver
+import time
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from seleniumwire import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.firefox.options import Options
 
 def out_red(text):
     print("\033[38;5;196m {}" .format(text))
@@ -31,17 +30,21 @@ out_violet(" ########  ###       ########## ########   ########  ###    ####  ##
 out_white("")
 
 video_link = input('[+] INPUT LINK: ')
+print()
 
-options = webdriver.ChromeOptions()
-options.add_argument("--start-maximized")
-driver = webdriver.Chrome(
-    ChromeDriverManager().install(),
-    options=options,
-)
+options = Options()
+options.headless = True
 
-driver.get('https://ru.savefrom.net/7/')
+driver = webdriver.Firefox(options=options)
+
+driver.get("https://ru.savefrom.net/7/")
+
 driver.find_element_by_id('sf_url').send_keys(video_link)
 driver.find_element_by_id('sf_submit').click()
-element = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CLASS_NAME, "link-download")))
+
+time.sleep(35)
+
+element = driver.find_element_by_class_name('link-download')
 print(f"[+] DOWNLOAD: {element.get_attribute('href')}")
+
 driver.quit()
